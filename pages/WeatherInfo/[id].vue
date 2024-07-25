@@ -10,6 +10,23 @@ const selectedCity = computed(
   }
 );
 const weatherDescription = ref("");
+const weatherInfoUrl = "https://api.openweathermap.org/data/2.5/weather";
+const params: {
+  lang: string;
+  q: string;
+  appid: string;
+} =
+{
+  lang: "ja",
+  q: selectedCity.value.q,
+  appid: "23ae64132fd00154b103230dc3ccd13b"
+}
+const queryParams = new URLSearchParams(params);
+const urlFull = `${weatherInfoUrl}?${queryParams}`;
+const response = await $fetch(urlFull) as any;
+const weatherArray = response.weather;
+const weather = weatherArray[0];
+weatherDescription.value = weather.description;
 </script>
 
 <template>
