@@ -11,7 +11,6 @@ const selectedCity = computed(
   }
 );
 
-const weatherDescription = ref("");
 const asyncData = await useAsyncData(
   `/WeatherInfo/${route.params.id}`,
   (): Promise<any> => {
@@ -30,13 +29,16 @@ const asyncData = await useAsyncData(
     const urlFull = `${weatherInfoUrl}?${queryParams}`;
     const response = $fetch(urlFull);
     return response;
+  },
+  {
+    transform: (data: any): string => {
+      const weatherArray = data.weather;
+      const weather = weatherArray[0];
+      return weather.description;
+    }
   }
 );
-
-const data = asyncData.data;
-const weatherArray = data.value.weather;
-const weather = weatherArray[0];
-weatherDescription.value = weather.description;
+const weatherDescription = asyncData.data;
 </script>
 
 <template>
