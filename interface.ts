@@ -3,3 +3,8 @@ export interface City {
   name: string;
   q: string;
 }
+
+export interface WeatherInfoData {
+  cityName: string;
+  description: string;
+}
