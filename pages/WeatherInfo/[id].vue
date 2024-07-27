@@ -11,22 +11,26 @@ const selectedCity = computed(
   }
 );
 
-const params: {
-  lang: string;
-  q: string;
-  appid: string;
-} =
-{
-  lang: "ja",
-  q: selectedCity.value.q,
-  appid: "23ae64132fd00154b103230dc3ccd13b"
-}
-
-const asyncData = await useFetch(
-  "https://api.openweathermap.org/data/2.5/weather",
+const asyncData = useLazyAsyncData(
+  `/WeatherInfo/${route.params.id}`,
+  (): Promise<any> => {
+    const weatherInfoUrl = "https://api.openweathermap.org/data/2.5/weather";
+    const params: {
+      lang: string;
+      q: string;
+      appid: string;
+    } =
+    {
+      lang: "ja",
+      q: selectedCity.value.q,
+      appid: "23ae64132fd00154b103230dc3ccd13b"
+    }
+    const queryParams = new URLSearchParams(params);
+    const urlFull = `${weatherInfoUrl}?${queryParams}`;
+    const response = $fetch(urlFull);
+    return response;
+  },
   {
-    key: `/WeatherInfo/${route.params.id}`,
-    query: params,
     transform: (data: any): string => {
       const weatherArray = data.weather;
       const weather = weatherArray[0];
@@ -35,9 +39,11 @@ const asyncData = await useFetch(
   }
 );
 const weatherDescription = asyncData.data;
+const pending = asyncData.pending;
 </script>
 
 <template>
+  <p v-if="pending">データ取得中</p>
   <section>
     <h2>{{ selectedCity.name }}の天気</h2>
     <p>{{ weatherDescription }}</p>
