@@ -36,7 +36,7 @@ useState<Map<number, City>>(
 
 <template>
   <header>
-    <h1>リフレッシュサンプル</h1>
+    <h1>watchサンプル</h1>
   </header>
   <main>
     <NuxtPage/>
