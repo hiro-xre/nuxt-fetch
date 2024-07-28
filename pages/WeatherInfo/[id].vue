@@ -14,7 +14,7 @@ const selectedCity = computed(
 const asyncData = useLazyAsyncData(
   `/WeatherInfo/${route.params.id}`,
   (): Promise<any> => {
-    const weatherInfoUrl = "https://api.openweathermap.org/data/2.5/weather";
+    const config = useRuntimeConfig();
     const params: {
       lang: string;
       q: string;
@@ -23,10 +23,10 @@ const asyncData = useLazyAsyncData(
     {
       lang: "ja",
       q: selectedCity.value.q,
-      appid: "23ae64132fd00154b103230dc3ccd13b"
+      appid: config.public.weathermapAppid
     }
     const queryParams = new URLSearchParams(params);
-    const urlFull = `${weatherInfoUrl}?${queryParams}`;
+    const urlFull = `${config.public.weatherInfoUrl}?${queryParams}`;
     const response = $fetch(urlFull);
     return response;
   },

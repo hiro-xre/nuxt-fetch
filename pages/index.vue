@@ -6,8 +6,8 @@ const selectedCityId = ref(1853909);
 
 const asyncData = useAsyncData(
   (): Promise<any> => {
+    const config = useRuntimeConfig();
     const selectedCity = cityList.value.get(selectedCityId.value) as City;
-    const weatherInfoUrl = "https://api.openweathermap.org/data/2.5/weather";
     const params: {
       lang: string;
       q: string;
@@ -16,10 +16,10 @@ const asyncData = useAsyncData(
     {
       lang: "ja",
       q: selectedCity.q,
-      appid: "23ae64132fd00154b103230dc3ccd13b"
+      appid: config.public.weathermapAppid
     }
     const queryParams = new URLSearchParams(params);
-    const urlFull = `${weatherInfoUrl}?${queryParams}`;
+    const urlFull = `${config.public.weatherInfoUrl}?${queryParams}`;
     const response = $fetch(urlFull);
     return response;
   },
@@ -28,7 +28,7 @@ const asyncData = useAsyncData(
       const weatherArray = data.weather;
       const weather = weatherArray[0];
       return {
-        cityName: `${data.name}の天気`,
+        cityName: data.name,
         description: weather.description
       }
     },
